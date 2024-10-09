@@ -43,7 +43,7 @@ const addTodo = (e) => {
 					))}
 				</ul>
 			</div>
-			<span>{arrtodos.length} items left</span>
+			<span>{arrtodos.length < 1 ? "No hay tareas, añadir tareas" : arrtodos.length + " items" +  " left"}</span>
 		</div>
 		</>
 	);
