@@ -1,7 +1,5 @@
 import React, {useState} from "react";
 
-//include images into your bundle
-import rigoImage from "../../img/rigo-baby.jpg";
 
 //create your first component
 const Home = () => {
@@ -26,8 +24,10 @@ const addTodo = (e) => {
 	return (
 		<>
 		<div className="text-center container mt-5">
-			<h1 className="title">My ToDo List</h1>
-			<div className="card">
+			<h1 className="mytitle text-black-50">todos</h1>
+			<div className="card shadow pb-2 pe-2 rounded"> 
+			<div className="card pb-2 pe-1">
+			<div className="card pb-1 me-1">
 				<ul className="list-group list-group-flush">
 					<li className="list-group-item"> 
 						<input className="form-control" placeholder="What needs to be done?" value={todo} 
@@ -42,8 +42,14 @@ const addTodo = (e) => {
 						</li>
 					))}
 				</ul>
+				<div className="row text-start">
+				<span className="ms-1 text-secondary">{arrtodos.length < 1 ? "No hay tareas, añadir tareas" : arrtodos.length + " items" +  " left"}</span>
+				</div>
 			</div>
-			<span>{arrtodos.length < 1 ? "No hay tareas, añadir tareas" : arrtodos.length + " items" +  " left"}</span>
+			</div>				
+			</div>
+			
+			
 		</div>
 		</>
 	);
