@@ -84,33 +84,35 @@ function removeTodo(index) {
 	})
 }
 
-function changeCheckboxStatus (e, todoId) {
+function changeCheckboxStatus(e, todoId) {
 	const isChecked = e.target.checked;
 	let updatedstatus = {
-		is_done: isChecked
+	  is_done: isChecked
 	};
-todos.map((value)=> {
-	if (value.id === todoId) {
-		fetch(`https://playground.4geeks.com/todo/todos/${todoId}`, {
-			method: "PUT",
-			body: JSON.stringify(updatedstatus),
-			headers: {
-				"Content-Type": "application/json"
-			}
-			.then(resp => {
-				if (resp.status === 204) {
-					getTodos()
-				}
-			})
-			.catch(error => {
-				console.log(error);
-			})
-	
-		})
-	}
-})
-	
-}
+  
+	// Reemplazar 'index' por 'todoId'
+	fetch(`https://playground.4geeks.com/todo/todos/${todoId}`, {
+	  method: "PUT",
+	  body: JSON.stringify(updatedstatus),
+	  headers: {
+		"Content-Type": "application/json"
+	  }
+	})
+	.then(resp => {
+	  console.log(resp.ok); 
+	  console.log(resp.status); 
+	  console.log(resp.text()); 
+	  return resp.json();
+	})
+	.then(data => {
+	  console.log("Update response:", data);
+	  getTodos(); // Actualiza la lista de tareas después de cambiar el estado
+	})
+	.catch(error => {
+	  console.log(error);
+	});
+  }
+  
 
 const handleKeyDown = (e, todo) => {
 	if (e.key === 'Enter') { 
