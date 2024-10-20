@@ -5,8 +5,42 @@ const Home = () => {
   const [todos, setTodos] = useState([]);
 
   useEffect(() => {
-    getTodos(); //Con el useEffect el codigo se ejecuta solo una vez y asi evitar que cree infinitos pedidos a la API
+    checkUser()
   }, []);
+
+  function checkUser(){
+    fetch("https://playground.4geeks.com/todo/users?offset=0&limit=100")
+    .then((resp) => resp.json())
+    .then((data) => {
+      const foundUser = data.users.find((item => item.name === "MatiRosas31"));
+      if (foundUser) {
+        console.log("Usuario encontrado: ", foundUser);
+        getTodos();
+      } else {
+        console.log("Usuario no encontrado: Creando usario... ");
+        let newUser = {
+          name: "MatiRosas31"
+        };
+        fetch("https://playground.4geeks.com/todo/users/MatiRosas31", {
+          method: "POST",
+          body: JSON.stringify(newUser),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+        .then((resp) => {
+          console.log(resp.ok);
+          console.log(resp.status);
+          return resp.json();
+        })
+        .then((user) => {
+          console.log("Usuario creado: ", user);
+          getTodos();
+        })
+        .catch((error) => console.error(error));
+      }
+    })
+  }
 
   function getTodos() {
     fetch("https://playground.4geeks.com/todo/users/MatiRosas31")
@@ -31,6 +65,7 @@ const Home = () => {
         .then((resp) => resp.json())
         .then(() => {
           setTodos((prevTodos) => [...prevTodos, newTask]); //copia del array pero se agrega la nueva task/to-do
+          setTodo("");
         })
         .catch((error) => console.error(error));
     }
@@ -73,7 +108,7 @@ const Home = () => {
     })
       .then((resp) => resp.json())
       .then((data) => {
-        console.log("Update response:", data);
+        console.log("Updated response:", data);
       })
       .catch((error) => console.error(error));
   }
@@ -128,9 +163,9 @@ const Home = () => {
                 ))}
               </ul>
               <div className="row text-start">
-                <span className="ms-1 text-secondary">
+                <span className="ms-2 text-secondary fw-semibold">
                   {todos.length < 1
-                    ? "No hay tareas, añadir tareas"
+                    ? "No hay tareas, añade una tarea"
                     : todos.length + " items left"}
                 </span>
               </div>
