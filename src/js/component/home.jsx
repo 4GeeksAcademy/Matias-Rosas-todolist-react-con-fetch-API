@@ -6,7 +6,7 @@ const Home = () => {
 
   useEffect(() => {
     checkUser()
-  }, []);
+  },[]);
 
   function checkUser(){
     fetch("https://playground.4geeks.com/todo/users?offset=0&limit=100")
@@ -63,8 +63,8 @@ const Home = () => {
         },
       })
         .then((resp) => resp.json())
-        .then(() => {
-          setTodos((prevTodos) => [...prevTodos, newTask]); //copia del array pero se agrega la nueva task/to-do
+        .then((createdTodo) => {
+          setTodos((prevTodos) => [...prevTodos, createdTodo]);  //Usa el todo devuelto por la API, que incluye el id
           setTodo("");
         })
         .catch((error) => console.error(error));
@@ -72,19 +72,21 @@ const Home = () => {
   }
 
   function removeTodo(todoId) {
-    fetch(`https://playground.4geeks.com/todo/todos/${todoId}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((resp) => {
-        if (resp.status === 204) {
-          setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== todoId));//La función filter se usa para crear un nuevo array que contiene solo los elementos cuyo id no coincide con todoId (es decir, la tarea a eliminar).
-        }
+    console.log("Este es el todo.id que le llega a la function: ", todoId)
+      let newupdatedTodos = todos.filter((todo) => todo.id !== todoId)
+      setTodos(newupdatedTodos);
+      fetch(`https://playground.4geeks.com/todo/todos/${todoId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
       })
-      .catch((error) => console.error(error));
-  }
+        .then((resp) => {
+          console.log("Esta es la respuesta luego de la peticion de eliminar la todo: ",resp.status)
+        })
+        .catch((error) => console.error(error));
+    }
+    
 
   function changeCheckboxStatus(e, todoId) {
     const isChecked = e.target.checked;
@@ -108,7 +110,7 @@ const Home = () => {
     })
       .then((resp) => resp.json())
       .then((data) => {
-        console.log("Updated response:", data);
+        console.log("Updated task status :", data);
       })
       .catch((error) => console.error(error));
   }
@@ -154,7 +156,7 @@ const Home = () => {
                       <span className="ms-2">{item.label}</span>
                     </div>
                     <button
-                      onClick={() => removeTodo(item.id)}
+                      onClick={() => {removeTodo(item.id)}}
                       className="boton boton-danger me-2"
                     >
                       X
